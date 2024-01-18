@@ -5,6 +5,7 @@ import "./App.css";
 function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [city, setCity] = useState(null);
+  const [timezone] = useState(null);
   const [apiKey] = useState("c765779cb0164be2a3f153104241301");
   const fetchData = async () => {
     try {
@@ -14,6 +15,16 @@ function App() {
       setWeatherData(response.data);
     } catch (error) {
       console.error("Error fetching weather data: ", error);
+    }
+  };
+  const fetchTimezone = async () => {
+    try {
+      const response = await axios.get(
+        `http://api.weatherapi.com/v1/${timezone}.json`
+      );
+      setWeatherData(response.data);
+    } catch (error) {
+      console.error("Error fetching timezone data: ", error);
     }
   };
   return (
@@ -27,12 +38,16 @@ function App() {
           onChange={(e) => setCity(e.target.value)}
         />
         <button onClick={fetchData}>Get Weather</button>
+        <button onClick={fetchTimezone}>Get Timezone</button>
 
         {weatherData && (
           <div>
             <h3>{weatherData.location.name}</h3>
-            <p>Temperature: {weatherData.current.temp_c}°C</p>
-            {/* Add more weather information as needed */}
+            <p>
+              Temperature: {weatherData.current.temp_c}°C{" "}
+              {weatherData.current.temp_f}°F
+            </p>
+            <p>Timezone: {weatherData.current.timezone}</p>
           </div>
         )}
       </div>
